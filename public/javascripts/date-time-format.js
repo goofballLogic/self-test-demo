@@ -1,0 +1,1 @@
+export const standardFormatter = new Intl.DateTimeFormat([], { year: "numeric", month: "long", day: "numeric" });

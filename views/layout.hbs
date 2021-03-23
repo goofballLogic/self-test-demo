@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{title}}</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <script src="/WC/test-diagnostics.js" type="module"></script>
+  <script src="/javascripts/self-test.js" type="module"></script>
+</head>
+
+<body>
+  <header>
+    <h1>&nbsp;{{title}}&nbsp;</h1>
+  </header>
+  <main>
+    {{{body}}}
+  </main>
+  <footer>
+    <a href="?self-test" class="self-test">Dashboard</a>
+    <test-diagnostics></test-diagnostics>
+  </footer>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => document.body.classList.add("loaded"));
+  </script>
+</body>
+
+</html>

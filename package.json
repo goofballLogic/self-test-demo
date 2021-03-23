@@ -1,0 +1,23 @@
+{
+  "name": "self-test-demo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www --ignore node_modules"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "cucumber-expressions": "^8.3.0",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "gherkin": "^9.0.0",
+    "hbs": "^4.1.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}

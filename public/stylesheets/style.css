@@ -1,0 +1,86 @@
+html {
+  font-family: 'VT323', monospace;
+  font-weight: 400;
+  font-size: 20pt;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  margin: 0;
+  opacity: 0;
+  padding: 1em 0;
+  background-color: #0030FF;
+  color: white;
+  flex-direction: column;
+  width: 40em;
+}
+
+@media (min-width: 1000px) {
+  body {
+    margin: 100px;
+  }
+}
+
+body.loaded {
+  opacity: 1;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header::before, header::after {
+  content: "";
+  height: 1px;
+  border: solid 1px white;
+  border-right: 0;
+  border-left: 0;
+  flex: 1;
+}
+
+h1 {
+  font-size: 20pt;
+  margin: 0;
+  text-transform: uppercase;
+  text-align: center;
+  background-color: #63CFFF;
+  box-shadow: 0 0.5em 0 -0.2em black;
+}
+
+main, footer {
+  padding: 0.5em;
+}
+
+main {
+  flex: 1;
+}
+
+a {
+  color: white !important;
+}
+
+article.diary {
+  line-height: 1.5em;
+}
+
+article.diary time {
+  float: left;
+  margin-right: 0.5em;
+  text-transform: uppercase;
+}
+
+article.diary time::after {
+  content: "..."
+}
+
+article.diary .body {
+  white-space: pre-line;
+}
