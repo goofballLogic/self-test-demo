@@ -37,6 +37,10 @@ registry["match added entry"] = function (expected) {
     if (actual.id !== addedEntryId) throw new Error("Unexpected test entry");
 
     const dateTimeFormatter = new Intl.DateTimeFormat(dateTimeOptions.locale, dateTimeOptions);
+    const doogieFormat = x => {
+        const { month, day, year } = Object.fromEntries(dateTimeFormatter.formatToParts(x).map(x => [x.type, x.value]));
+        return `${month} ${day}, ${year}`;
+    };
 
     assert.deepStrictEqual({
         when: expected.when,
@@ -44,7 +48,7 @@ registry["match added entry"] = function (expected) {
         text: expected.text
     }, {
         when: JSON.parse(JSON.stringify(actual.when)),
-        whenText: dateTimeFormatter.format(actual.when),
+        whenText: doogieFormat(actual.when),
         text: actual.text
     });
 }

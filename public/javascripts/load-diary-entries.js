@@ -22,7 +22,6 @@ async function loadDiaryEntries() {
     diaryEntries.innerHTML = "";
     for (let entry of json) {
         const article = template.content.cloneNode(true);
-        console.log(article);
         const timeElement = article.querySelector("time");
         timeElement.setAttribute("datetime", entry.when);
         timeElement.textContent = formatDiaryWhen(entry.when);

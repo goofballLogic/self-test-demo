@@ -5,6 +5,7 @@ dialog::backdrop {
 
 dialog {
     font-family: Arial;
+    line-height: 1.3;
     font-size: 12pt;
     position: absolute;
     margin-top: 10vh;
@@ -14,17 +15,18 @@ dialog {
     padding: 0;
     border: none;
     border-radius: 10px;
-    background-color: rgba(200, 200, 200, 0.9);
+    background: linear-gradient(135deg, silver, grey);
     box-shadow: 0 0 30px -10px black;
 }
 
-dialog>.container {
+.container {
     height: 100%;
     display: flex;
     flex-direction: column;
+    font-size: 10pt;
 }
 
-dialog header {
+.container header {
     padding: 30px;
     display: flex;
     padding-bottom: 0;
@@ -32,35 +34,103 @@ dialog header {
     opacity: 0.5;
 }
 
-dialog header img {
+.container header img {
     margin-right: 10px;
 }
 
-dialog header h2 {
+.container header h2 {
     margin: 0;
     text-transform: uppercase;
 }
 
-dialog .output {
+.container .output {
     flex: 1;
     overflow: auto;
     margin: 30px;
     padding: 30px;
     background-color: white;
-    box-shadow: inset 0 0 5px -2px black;
+    box-shadow: inset 0 0 5px -1px black;
 }
 
-dialog .output section+section {
-    margin-top: 40px;
-    padding-top: 40px;
-    border-top: solid 0.1px silver;
+.feature>heading {
+    font-weight: bold;
+    padding: 0 5px;
+    border-bottom: solid 1px black;
 }
 
-dialog .output h3 {
-    margin: 0;
+.feature>.description {
+    white-space: pre-line;
+    margin: 10px;
 }
 
-.scenario h4 {
+.scenarios heading {
+    font-weight: bold;
+}
+
+ul, ol {
+    margin: 10px 30px;
+    padding: 0;
+}
+
+.scenarios li {
+    list-style: none;
+}
+
+.steps .description {
+    display: flex;
+}
+
+.steps .outcome {
+    display: none;
+}
+
+.steps .failed .outcome {
+    display: block;
+    margin: 10px 20px;
+    background-color: #FEE;
+    padding: 20px;
+    white-space: pre;
+    font-family: monospace;
+}
+
+.steps .failed .description::before {
+    align-self: center;
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 7px;
+    margin-left: -15px;
+    margin-right: 5px;
+    animation-name: pulse-red;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0;
+        background: radial-gradient(darkred, darkred 20%);
+    }
+    50% {
+        box-shadow: 0 0 5px -1px red;
+        background: radial-gradient(red 50%, black 100%);
+    }
+    100% {
+        box-shadow: 0;
+        background: radial-gradient(darkred, darkred 20%);
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+
+/* .scenario h4 {
     margin-bottom: 0;
 }
 
@@ -105,28 +175,4 @@ dialog .output h3 {
     animation-name: spinner;
     animation-duration: 3s;
     animation-iteration-count: infinite;
-}
-
-@keyframes pulse-red {
-    0% {
-        box-shadow: 0;
-        background: radial-gradient(darkred, darkred 20%);
-    }
-    50% {
-        box-shadow: 0 0 5px -1px red;
-        background: radial-gradient(red 50%, black 100%);
-    }
-    100% {
-        box-shadow: 0;
-        background: radial-gradient(darkred, darkred 20%);
-    }
-}
-
-@keyframes spinner {
-    0% {
-        transform: rotateZ(0deg);
-    }
-    100% {
-        transform: rotateZ(360deg);
-    }
-}
+} */

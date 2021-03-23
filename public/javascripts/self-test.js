@@ -2,7 +2,6 @@ import "./step_definitions/given.js";
 import "./step_definitions/when.js";
 import "./step_definitions/then.js";
 
-import ansispan from "./ansispan.js";
 import { matchStep } from "./bdd.js";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -28,15 +27,6 @@ async function initSelfTesting() {
     const resp = await fetch("/features");
     const json = await resp.json();
 
-    document.querySelector("test-diagnostics").open(() => {
-        const url = new URL(location.href);
-        url.searchParams.delete("self-test");
-        history.replaceState(null, null, url.toString());
-    });
-
-    const output = dialog.querySelector(".output");
-    output.innerHTML = "";
-
     const pickles = json.reduce((index, x) => ("pickle" in x) ? [...index, x.pickle] : index, []);
     const pickleSteps = pickles.reduce((index, p) => {
         index = { ...index };
@@ -54,13 +44,11 @@ async function initSelfTesting() {
             contextFreeStep = { ...step, keyword: keywordContext };
         else if (step.keyword === "And ")
             contextFreeStep = { ...step, keyword: keywordContext };
-
         else
             keywordContext = step.keyword;
 
         try {
             const matched = matchStep(contextFreeStep, pickleSteps);
-            console.log(matched);
             if (matched) {
                 const params = (matched.params || []);
                 if (step.docString)
@@ -77,77 +65,58 @@ async function initSelfTesting() {
         return keywordContext;
     }
 
-    try {
-        for (let processStep of json) {
-            if (processStep.gherkinDocument) {
+    const features = json
+        .map(x => [x.gherkinDocument?.uri, x.gherkinDocument?.feature])
+        .filter(x => x[1])
+        .map(([uri, feature]) => {
+            const background = feature.children.find(x => "background" in x)?.background;
+            const scenarios = feature.children
+                .map(x => x.scenario)
+                .filter(x => x)
+                .map(x => ({
+                    id: x.id,
+                    name: x.name,
+                    steps: [
+                        ...background?.steps || [],
+                        ...x.steps || []
+                    ]
+                }));
+            return {
+                id: uri.substring(uri.indexOf("features") + 9).replace(/\W/g, "_"),
+                name: feature.name,
+                tags: feature.tags?.map(t => t.name),
+                description: feature.description,
+                scenarios
+            };
+        });
 
-                const feature = processStep.gherkinDocument.feature;
-                const section = el("SECTION",
-                    el("H3", `Feature: ${feature.name}`),
-                    ...feature.description.split("\n").map(x => el("DIV.step", x.trim()))
-                );
-                output.appendChild(section);
-                const background = processStep.gherkinDocument.feature.children.find(x => "background" in x)?.background;
-                for (let child of processStep.gherkinDocument.feature.children) {
-                    if (child.scenario) {
+    const testDiagnostics = document.querySelector("test-diagnostics");
 
-                        const scenarioContext = {};
-                        const scenario = child.scenario;
-                        let keywordContext = null;
-                        const scenarioDiv = el("DIV.scenario.pending",
-                            el("H4.status-light", `Scenario: ${scenario.name}`)
-                        );
-                        section.append(scenarioDiv);
-                        try {
-                            const steps = [
-                                ...(background?.steps || []),
-                                ...(scenario.steps || [])
-                            ];
-                            for (let step of steps) {
-                                const stepDiv = el("DIV.step.status-light", `${step.keyword}${step.text}`);
-                                try {
-                                    scenarioDiv.appendChild(stepDiv);
-                                    keywordContext = await runStep(step, keywordContext, scenarioContext, scenarioDiv);
-                                } finally {
-                                    stepDiv.classList.remove("status-light");
-                                }
-                            }
-                            scenarioDiv.classList.add("ok");
-                        } catch (err) {
-                            scenarioDiv.appendChild(el("DIV.step",
-                                el("PRE.error", ansispan(err.originalStack))
-                            ));
-                            scenarioDiv.classList.add("fail");
-                        } finally {
-                            scenarioDiv.classList.remove("pending");
-                        }
+    testDiagnostics.features(features);
+    testDiagnostics.open(() => {
+        const url = new URL(location.href);
+        url.searchParams.delete("self-test");
+        history.replaceState(null, null, url.toString());
+    });
 
-                    }
+    for (let feature of features) {
+
+        for (let scenario of feature.scenarios) {
+
+            const scenarioContext = {};
+            let keywordContext = null;
+            try {
+                for (let step of scenario.steps) {
+                    testDiagnostics.running(feature.id, scenario.id, step.id);
+                    keywordContext = await runStep(step, keywordContext, scenarioContext);
+                    testDiagnostics.succeeded();
                 }
+            } catch (err) {
+                testDiagnostics.failed(err.originalStack || err.stack);
             }
+
         }
-    } catch (err) {
-        output.innerHTML = output.innerHTML + `<h4>Error</h4><pre>${ansispan(err.stack)}</pre>`;
+
     }
 
 }
-
-function el(tag) {
-    tag = tag.split(".");
-    const x = document.createElement(tag[0]);
-    for (var i = 1; i < tag.length; i++) {
-        x.classList.add(tag[i]);
-    }
-    for (var i = 1; i < arguments.length; i++) {
-        const y = arguments[i];
-        if (typeof y !== "string") {
-            x.appendChild(y);
-        } else {
-            x.innerHTML = x.innerHTML + y;
-        }
-    }
-    return x;
-}
-
-
-

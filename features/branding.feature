@@ -7,9 +7,9 @@ Feature: Branding of the app
         Given I have loaded the app
 
     Scenario: Textual elements
-        Then the title of the app should be "My diary"
-        And the main heading should be "My diary"
+        Then the title of the app should be "Personal journal of Doogie Howser, M.D."
+        And the main heading should be "Personal journal of Doogie Howser, M.D."
 
     Scenario: Styling
-        Then the background colour should be "light beige"
-        And the text colour should be "dark slate grey"
+        Then the background colour should be "bright blue"
+        And the text colour should be "white"
