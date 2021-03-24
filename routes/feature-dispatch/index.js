@@ -12,6 +12,12 @@ module.exports = function dispatch(description, context, params) {
     }
 }
 
+registry["before"] = function () {
+
+    db.testEntries = {};
+
+}
+
 registry["add test entry"] = function (text) {
 
     const nextYear = new Date();

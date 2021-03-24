@@ -2,6 +2,7 @@ import { Then } from "../bdd.js";
 import { server } from "../remoting.js";
 import expect from "../expect.js";
 import { verifyAppBackgroundColour, verifyAppFontColour } from "./implementations/branding.js";
+import { verifyCurrentDateDisplayedBesideEditableArea, verifyFocusedAreaIsEditable } from "./implementations/editing.js";
 import { inspectFirstEntry } from "./implementations/entries.js";
 
 Then("the title of the app should be {string}", expected => expect(document.title).to.be(expected));
@@ -13,3 +14,7 @@ Then("the background colour should be {string}", verifyAppBackgroundColour);
 Then("the text colour should be {string}", verifyAppFontColour);
 
 Then("the test entry should be displayed as the first item on the page", server("match added entry", inspectFirstEntry));
+
+Then("my cursor should be focused in an editable area", verifyFocusedAreaIsEditable);
+
+Then("the current date should be displayed beside the editable area", verifyCurrentDateDisplayedBesideEditableArea);

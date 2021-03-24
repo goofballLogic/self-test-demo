@@ -3,6 +3,7 @@ import "./step_definitions/when.js";
 import "./step_definitions/then.js";
 
 import { matchStep } from "./bdd.js";
+import { server } from "./remoting.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -67,7 +68,7 @@ async function initSelfTesting() {
 
     const features = json
         .map(x => [x.gherkinDocument?.uri, x.gherkinDocument?.feature])
-        .filter(x => x[1])
+        .filter(x => x[1]?.children)
         .map(([uri, feature]) => {
             const background = feature.children.find(x => "background" in x)?.background;
             const scenarios = feature.children
@@ -93,17 +94,15 @@ async function initSelfTesting() {
     const testDiagnostics = document.querySelector("test-diagnostics");
 
     testDiagnostics.features(features);
-    testDiagnostics.open(() => {
-        const url = new URL(location.href);
-        url.searchParams.delete("self-test");
-        history.replaceState(null, null, url.toString());
-    });
+
+    const beforeAll = server("before");
 
     for (let feature of features) {
 
         for (let scenario of feature.scenarios) {
 
             const scenarioContext = {};
+            await beforeAll.call(scenarioContext)
             let keywordContext = null;
             try {
                 for (let step of scenario.steps) {
@@ -118,5 +117,11 @@ async function initSelfTesting() {
         }
 
     }
+
+    testDiagnostics.open(() => {
+        const url = new URL(location.href);
+        url.searchParams.delete("self-test");
+        history.replaceState(null, null, url.toString());
+    });
 
 }

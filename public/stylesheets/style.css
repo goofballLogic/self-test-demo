@@ -6,7 +6,6 @@ html {
   display: flex;
   justify-content: center;
   width: 100vw;
-  overflow: hidden;
   min-height: 100vh;
 }
 
@@ -83,4 +82,10 @@ article.diary time::after {
 
 article.diary .body {
   white-space: pre-line;
+  margin-bottom: 20px;
+}
+
+article.diary .body[contenteditable=true] {
+  margin-bottom: 100px;
+  outline: 0px solid transparent;
 }

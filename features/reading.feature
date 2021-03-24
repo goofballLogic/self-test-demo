@@ -3,8 +3,6 @@ Feature: Reading diary entries
     I want to be able to see my diary entries
     So that I can review what I have written and feel at home in the context of my previous thoughts
 
-
-
     Scenario: The latest entry should be shown at the top
         Given a test entry exists dated a year into the future
             """

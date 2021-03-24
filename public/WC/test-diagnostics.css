@@ -23,7 +23,7 @@ dialog {
     height: 100%;
     display: flex;
     flex-direction: column;
-    font-size: 10pt;
+    font-size: 8pt;
 }
 
 .container header {
@@ -126,7 +126,6 @@ ul, ol {
     padding: 10px;
     box-sizing: border-box;
     flex-direction: column;
-    font-size: 0.8em;
     font-weight: 100;
     text-align: center;
     border: outset 1px;
