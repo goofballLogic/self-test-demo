@@ -1,4 +1,4 @@
-Feature: Branding of the app
+Feature: Application branding
     As a user
     I want to be able to recognise the app by its branding
     So that I can shift into the right mental model for using it

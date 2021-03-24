@@ -41,6 +41,7 @@ dialog {
 .container header h2 {
     margin: 0;
     text-transform: uppercase;
+    flex: 1;
 }
 
 .container .output {
@@ -54,13 +55,18 @@ dialog {
 
 .feature>heading {
     font-weight: bold;
-    padding: 0 5px;
-    border-bottom: solid 1px black;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+}
+
+.feature>heading img {
+    margin-right: 5px;
 }
 
 .feature>.description {
     white-space: pre-line;
-    margin: 10px;
+    margin-left: 25px;
 }
 
 .scenarios heading {
@@ -106,6 +112,42 @@ ul, ol {
     animation-iteration-count: infinite;
 }
 
+.container.overview .feature>.description, .container.overview .scenarios {
+    display: none;
+}
+
+.container.overview .output {
+    display: flex;
+}
+
+.container.overview .feature>heading {
+    width: 100px;
+    height: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+    flex-direction: column;
+    font-size: 0.8em;
+    font-weight: 100;
+    text-align: center;
+    border: outset 1px;
+    margin: 10px;
+    background: linear-gradient(135deg, #CCC 0, #CCC 20px, transparent 20px);
+}
+
+.container.overview .feature.succeeded>heading {
+    background: linear-gradient(135deg, #7C7 0, #7C7 20px, transparent 20px);
+}
+
+.container.overview .feature.failed>heading {
+    animation-name: pulse-red-corner;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.container.overview .feature>heading>* {
+    flex: 1;
+}
+
 @keyframes pulse-red {
     0% {
         box-shadow: 0;
@@ -121,58 +163,14 @@ ul, ol {
     }
 }
 
-@keyframes spinner {
+@keyframes pulse-red-corner {
     0% {
-        transform: rotateZ(0deg);
+        background: linear-gradient(135deg, #700 0, #700 20px, transparent 20px);
+    }
+    50% {
+        background: linear-gradient(135deg, #F00 0, #F00 20px, transparent 20px);
     }
     100% {
-        transform: rotateZ(360deg);
+        background: linear-gradient(135deg, #700 0, #700 20px, transparent 20px);
     }
 }
-
-/* .scenario h4 {
-    margin-bottom: 0;
-}
-
-.scenario .step {
-    margin-left: 30px;
-    position: relative;
-}
-
-.status-light::before {
-    content: "";
-    position: absolute;
-    margin-left: -20px;
-    margin-top: 1px;
-    border-radius: 7px;
-    height: 14px;
-    width: 14px;
-}
-
-.scenario {
-    padding: 0 30px;
-    margin: 0;
-    position: relative;
-}
-
-.scenario.ok .status-light::before {
-    background-color: green;
-}
-
-.scenario.ok .step {
-    display: none;
-}
-
-.scenario.fail .status-light::before {
-    background-color: red;
-    animation-name: pulse-red;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-}
-
-.scenario.pending .status-light::before {
-    background: linear-gradient(green 0%, transparent 50%);
-    animation-name: spinner;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-} */

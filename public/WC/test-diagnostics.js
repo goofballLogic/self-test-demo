@@ -12,17 +12,22 @@ const monitorIcon = el("IMG");
 monitorIcon.setAttribute("src", `${pathRoot}/monitor.svg`);
 monitorIcon.setAttribute("width", 20);
 
+const componentIcon = el("IMG");
+componentIcon.setAttribute("src", `${pathRoot}/component.svg`);
+componentIcon.setAttribute("width", 20);
+
 function render(root) {
+    const detail = el("BUTTON", "Detail mode");
+
+    const container = el("DIV.container.overview",
+        el("HEADER", monitorIcon.cloneNode(true), el("H2", "Dashboard"), detail),
+        el("DIV.output")
+    );
+
+    detail.addEventListener("click", () => container.classList.toggle("overview"));
+
     root.appendChild(css.cloneNode(true));
-    root.appendChild(el("DIALOG.diagnostics",
-        el("DIV.container",
-            el("HEADER",
-                monitorIcon.cloneNode(true),
-                el("H2", "Dashboard")
-            ),
-            el("DIV.output")
-        )
-    ));
+    root.appendChild(el("DIALOG.diagnostics", container));
 }
 
 function setDependentStatuses(feature, scenario, step) {
@@ -49,6 +54,10 @@ function statusClassSelector(tags) {
     return badge ? `.${badge}` : "";
 }
 
+function iconForFeature(feature) {
+    return componentIcon.cloneNode(true);
+}
+
 class TestDiagnostics extends HTMLElement {
 
     #root;
@@ -70,11 +79,10 @@ class TestDiagnostics extends HTMLElement {
     features(spec) {
         const output = this.#root.querySelector(".output");
         output.innerHTML = "";
-
         for (const feature of spec) {
             output.appendChild(el(
                 `SECTION.feature#_${feature.id}${statusClassSelector(feature.tags)}`,
-                el("HEADING", feature.name),
+                el("HEADING", iconForFeature(feature), el("SPAN", feature.name)),
                 el("DIV.description", feature.description),
                 el("UL.scenarios",
                     feature.scenarios.map(scenario => el(
@@ -97,15 +105,17 @@ class TestDiagnostics extends HTMLElement {
         this.#running = null;
     }
 
-    running() {
+    running(featureId, scenarioId, stepId) {
         if (this.#running) {
             this.failed("Interrupted before complete");
         }
-        this.#running = Array.from(arguments).map(x => this.#root.querySelector(`#_${x}`));
-        const [feature, scenario, step] = this.#running;
+        const feature = this.#root.querySelector(`#_${featureId}`);
         if (!feature) throw new Error("Feature not found");
+        const scenario = feature.querySelector(`#_${scenarioId}`);
         if (!scenario) throw new Error("Scenario not found");
+        const step = scenario.querySelector(`#_${stepId}`);
         if (!step) throw new Error("Step not found");
+        this.#running = [feature, scenario, step];
         step.querySelector(".outcome").innerHTML = "";
     }
 
